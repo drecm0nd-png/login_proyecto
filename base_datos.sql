@@ -1,3 +1,4 @@
+-- Active: 1780338044807@@127.0.0.1@3306@mysql
 CREATE DATABASE proyectoDB;
 
 USE proyectoDB;

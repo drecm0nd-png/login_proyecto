@@ -26,7 +26,6 @@ app.get("/register", (req, res) => res.sendFile(path.join(__dirname, "/pages/reg
 
 // Ruta para registrar usuario
 app.post("/register", async (req, res) => {
-  console.log(req.body);
   const { correo, nombre, telefono, contrasena } = req.body;
   const hashedPassword = await bcrypt.hash(contrasena, 10);
 
