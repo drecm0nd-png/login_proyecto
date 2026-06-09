@@ -1,2 +1,15 @@
+# Dependencias
 node_modules/
+
+# Variables de entorno
 .env
+
+# Configuración local de VS Code
+.vscode/
+
+# Logs
+*.log
+
+# Archivos temporales del sistema
+.DS_Store
+Thumbs.db

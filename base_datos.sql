@@ -1,21 +1,13 @@
--- Active: 1780338044807@@127.0.0.1@3306@mysql
-CREATE DATABASE proyectoDB;
+CREATE DATABASE IF NOT EXISTS proyectoDB;
 
 USE proyectoDB;
 
-CREATE TABLE usuarios (
+CREATE TABLE IF NOT EXISTS usuarios (
   id INT AUTO_INCREMENT PRIMARY KEY,
-  correo VARCHAR(100) NOT NULL UNIQUE,
   nombre VARCHAR(50) NOT NULL,
+  correo VARCHAR(100) NOT NULL UNIQUE,
   telefono VARCHAR(20),
-  contrasena VARCHAR(255) NOT NULL
+  contrasena VARCHAR(255) NOT NULL,
+  token_recuperacion VARCHAR(255) NULL,
+  token_expiracion DATETIME NULL
 );
-
-
-
-select * from usuarios;
-
-
-SHOW DATABASES;
-USE restauranteDB;
-SHOW TABLES;

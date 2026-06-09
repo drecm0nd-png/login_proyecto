@@ -1,44 +1,33 @@
+require('dotenv').config();
 const express = require('express');
-const mysql = require('mysql2');
+const session = require('express-session');
 const bodyParser = require('body-parser');
-const bcrypt = require('bcrypt');
 const path = require('path');
+const db = require('./app/config/db');
 
 const app = express();
-app.set("port", 4000);
+app.set("port", process.env.PORT || 4000);
 
-// Middleware
+// Middlewares
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(path.join(__dirname, "app/public")));
 
-// Conexión a MySQL
-const db = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  password: '',
-  database: 'proyectoDB'
-});
+// Sesiones
+app.use(session({
+  secret: process.env.SESSION_SECRET || 'secreto123',
+  resave: false,
+  saveUninitialized: false,
+  cookie: { secure: false } // true en producción con HTTPS
+}));
 
-// Rutas para páginas
-app.get("/", (req, res) => res.sendFile(path.join(__dirname, "/pages/login.html")));
-app.get("/register", (req, res) => res.sendFile(path.join(__dirname, "/pages/register.html")));
+// Rutas páginas
+app.get("/", (req, res) => res.sendFile(path.join(__dirname, "app/pages/login.html")));
+app.get("/register", (req, res) => res.sendFile(path.join(__dirname, "app/pages/register.html")));
 
-// Ruta para registrar usuario
-app.post("/register", async (req, res) => {
-  const { correo, nombre, telefono, contrasena } = req.body;
-  const hashedPassword = await bcrypt.hash(contrasena, 10);
-
-  const sql = "INSERT INTO usuarios (correo, nombre, telefono, contrasena) VALUES (?, ?, ?, ?)";
-  db.query(sql, [correo, nombre, telefono, hashedPassword], (err, result) => {
-    if (err) {
-      console.error(err);
-      res.send("Error al registrar usuario");
-    } else {
-      res.send("Usuario registrado con éxito");
-    }
-  });
-});
+// Rutas auth
+const authRoutes = require('./app/routes/authRoutes');
+app.use('/auth', authRoutes);
 
 // Iniciar servidor
 app.listen(app.get("port"), () => {
